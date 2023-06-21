@@ -1,0 +1,20 @@
+# Python
+*.pyc
+__pycache__/
+venv/
+.env
+
+# Flask
+instance/
+webapp.db
+
+# IDE/Editor
+.vscode/
+.idea/
+*.code-workspace
+
+# Logs
+*.log
+
+# Dependency management
+pip-selfcheck.json

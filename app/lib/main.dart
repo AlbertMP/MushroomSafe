@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:http/http.dart' as http;
+import 'dart:io';
 
 void main() {
   runApp(const MyApp());
@@ -68,6 +71,35 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
+  Future<void> _selectAndSendImage() async {
+    final picker = ImagePicker();
+    final pickedImage = await picker.pickImage(source: ImageSource.gallery);
+
+    if (pickedImage != null) {
+      final imageFile = File(pickedImage.path);
+      final imageBytes = await imageFile.readAsBytes();
+
+      // 构建你的请求
+      final url = 'https://mushroomsafe.free.beeceptor.com/images';
+      final request = http.MultipartRequest('POST', Uri.parse(url));
+      // request.files
+      //     .add(await http.MultipartFile.fromPath('image', imageFile.path));
+      request.files.add(http.MultipartFile.fromBytes('image', imageBytes,
+          filename: 'image.jpg'));
+
+      // 发送请求
+      final response = await request.send();
+
+      if (response.statusCode == 200) {
+        // 上传成功
+        print('Image uploaded successfully');
+      } else {
+        // 上传失败
+        print('Image upload failed');
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     // This method is rerun every time setState is called, for instance as done
@@ -116,10 +148,10 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+        onPressed: _selectAndSendImage,
+        tooltip: 'Select Image',
+        child: const Icon(Icons.photo_library),
+      ),
     );
   }
 }

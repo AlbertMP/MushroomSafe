@@ -1,2 +1,65 @@
 /model/mushroom_dataset_4_classes/*
 /model/results/*
+
+# Dart
+.dart_tool/
+.packages
+.pub/
+/build/
+/.dart_tool/
+
+# Flutter/Dart dependencies
+**/ios/Pods/
+**/android/.gradle/
+**/android/gradlew
+**/android/gradlew.bat
+**/android/local.properties
+**/android/GeneratedPluginRegistrant.*
+
+# Flutter build artifacts
+**/build/
+
+# Xcode
+**/*.pbxuser
+**/*.mode1v3
+**/*.mode2v3
+**/*.perspectivev3
+**/*.xcworkspace/
+**/*.xccheckout
+**/*.xcuserstate
+*.xcworkspace/
+*.xcworkspace/contents.xcworkspacedata
+!**/ios/Runner.xcworkspace/contents.xcworkspacedata
+
+# Android/IntelliJ
+**/.idea/
+**/.idea/.name
+**/.idea/.modules
+**/.idea/misc.xml
+**/.idea/modules.xml
+**/.idea/workspace.xml
+**/.idea/navEditor.xml
+**/.idea/assetWizardSettings.xml
+
+# Visual Studio Code
+.vscode/
+.history/
+.dart_code_metrics/
+
+# macOS
+**/.DS_Store
+
+# Android
+**/.gradle/
+**/build/
+**/captures/
+**/local.properties
+
+# IntelliJ
+**/*.iml
+**/*.iws
+**/*.ipr
+
+# Flutter analysis
+.dart_tool/
+.dart_tool/

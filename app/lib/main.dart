@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -16,21 +17,27 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   XFile? image;
 
+  String serverResponse = '';
+
   final ImagePicker picker = ImagePicker();
 
   Future<void> uploadImage(File imageFile) async {
-    var url = 'http://127.0.0.1:5000/images'; // Use Own URL
-    // var url = 'http://165.154.44.86:5000/images'; // Use Own URL
+    // var url = 'http://127.0.0.1:5000/images'; // Use Own URL
+    var url = 'http://165.154.44.86:50000/images'; // Use Own URL
     var request = http.MultipartRequest('POST', Uri.parse(url));
     request.files
         .add(await http.MultipartFile.fromPath('file', imageFile.path));
 
     var response = await request.send();
-    if (response.statusCode == 200) {
-      print('Image uploaded successfully');
-    } else {
-      print('Image upload failed with status: ${response.statusCode}');
-    }
+    var responseBody = await response.stream.toList();
+
+    // Convert the response body to a string
+    var serverResponse = utf8.decode(responseBody[0]);
+
+    setState(() {
+      this.serverResponse =
+          serverResponse; // Update the serverResponse variable
+    });
   }
 
   //we can upload image from camera or from gallery based on parameter
@@ -131,7 +138,14 @@ class _HomeState extends State<Home> {
                 : Text(
                     "No Image",
                     style: TextStyle(fontSize: 20),
-                  )
+                  ),
+            SizedBox(
+              height: 10,
+            ),
+            Text(
+              serverResponse,
+              style: TextStyle(fontSize: 16),
+            ),
           ],
         ),
       ),

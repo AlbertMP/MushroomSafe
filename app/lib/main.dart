@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
+import 'config.dart';
 
 void main() => runApp(MaterialApp(
       home: Home(),
@@ -23,7 +24,8 @@ class _HomeState extends State<Home> {
 
   Future<void> uploadImage(File imageFile) async {
     // var url = 'http://127.0.0.1:5000/images'; // Use Own URL
-    var url = 'http://165.154.44.86:50000/images'; // Use Own URL
+    var url = 'http://$serverIP:$serverPort/images'; // Use Own URL
+
     var request = http.MultipartRequest('POST', Uri.parse(url));
     request.files
         .add(await http.MultipartFile.fromPath('file', imageFile.path));

@@ -25,8 +25,8 @@ class _HomeState extends State<Home> {
 
   Future<void> uploadImage(File imageFile) async {
     // var url = 'http://127.0.0.1:5000/images'; // Use Own URL
-    var url = 'http://165.154.44.86:50000/images'; // Use Own URL
-    // var url = serverUrl;
+    // var url = 'http://165.154.44.86:50000/images'; // Use Own URL
+    var url = serverUrl;
 
     var request = http.MultipartRequest('POST', Uri.parse(url));
     request.files

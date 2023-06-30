@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
 import 'config.dart';
+import 'resultPage.dart';
 
 void main() => runApp(MaterialApp(
       home: Home(),
@@ -24,22 +25,45 @@ class _HomeState extends State<Home> {
 
   Future<void> uploadImage(File imageFile) async {
     // var url = 'http://127.0.0.1:5000/images'; // Use Own URL
-    var url = 'http://$serverIP:$serverPort/images'; // Use Own URL
+    var url = 'http://165.154.44.86:50000/images'; // Use Own URL
+    // var url = serverUrl;
 
     var request = http.MultipartRequest('POST', Uri.parse(url));
     request.files
         .add(await http.MultipartFile.fromPath('file', imageFile.path));
 
     var response = await request.send();
-    var responseBody = await response.stream.toList();
+    var responseBody = await response.stream.bytesToString();
 
-    // Convert the response body to a string
-    var serverResponse = utf8.decode(responseBody[0]);
+    // Convert the response body to a JSON object
+    var jsonData = jsonDecode(responseBody);
 
-    setState(() {
-      this.serverResponse =
-          serverResponse; // Update the serverResponse variable
-    });
+    if (jsonData.containsKey('predicted_class')) {
+      var predictedLabel = jsonData['predicted_class'];
+      var edible = jsonData['edible'];
+      var reference = jsonData['reference'];
+      var note = jsonData['note'];
+
+      setState(() {
+        this.serverResponse =
+            predictedLabel; // Update the serverResponse variable
+      });
+
+      Future.delayed(Duration(seconds: 1), () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => ResultPage(
+              imagePath: image!.path,
+              predictedLabel: predictedLabel,
+              edible: edible,
+              reference: reference,
+              note: note,
+            ),
+          ),
+        );
+      });
+    }
   }
 
   //we can upload image from camera or from gallery based on parameter
@@ -106,7 +130,7 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Upload Image'),
+        title: Text('MushroomSafe'),
       ),
       body: Center(
         child: Column(
@@ -117,36 +141,6 @@ class _HomeState extends State<Home> {
                 myAlert();
               },
               child: Text('Upload Photo'),
-            ),
-            SizedBox(
-              height: 10,
-            ),
-            //if image not null show the image
-            //if image null show text
-            image != null
-                ? Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(8),
-                      child: Image.file(
-                        //to show image, you type like this.
-                        File(image!.path),
-                        fit: BoxFit.cover,
-                        width: MediaQuery.of(context).size.width,
-                        height: 300,
-                      ),
-                    ),
-                  )
-                : Text(
-                    "No Image",
-                    style: TextStyle(fontSize: 20),
-                  ),
-            SizedBox(
-              height: 10,
-            ),
-            Text(
-              serverResponse,
-              style: TextStyle(fontSize: 16),
             ),
           ],
         ),

@@ -23,9 +23,15 @@ class _HomeState extends State<Home> {
 
   final ImagePicker picker = ImagePicker();
 
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance!.addPostFrameCallback((_) => showWarningDialog());
+  }
+
   Future<void> uploadImage(File imageFile) async {
-    // var url = 'http://127.0.0.1:5000/images'; // Use Own URL
-    var url = serverUrl;
+    var url = 'http://192.168.31.47:50000/images'; // Use Own URL
+    // var url = serverUrl;
 
     var request = http.MultipartRequest('POST', Uri.parse(url));
     request.files
@@ -121,6 +127,27 @@ class _HomeState extends State<Home> {
                 ],
               ),
             ),
+          );
+        });
+  }
+
+  void showWarningDialog() {
+    showDialog(
+        context: context,
+        barrierDismissible: false, // User must tap button to close dialog!
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('IMPORTANT WARNING'),
+            content: Text(
+                'The classifications provided by this application are for educational purposes only and should NOT be used as a substitute for professional advice or guidance. Please consult with a trained mycologist, field guide, or other reliable resources before consuming any wild mushrooms. Incorrect identification can lead to serious health issues or even death. Use this application at your own risk.'),
+            actions: [
+              ElevatedButton(
+                child: Text('I Understand'),
+                onPressed: () {
+                  Navigator.of(context).pop(); // Close the dialog
+                },
+              ),
+            ],
           );
         });
   }

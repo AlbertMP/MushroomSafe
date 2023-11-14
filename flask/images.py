@@ -8,7 +8,7 @@ from efficientnet_pytorch import EfficientNet
 import pandas as pd
 
 # Load the saved EfficientNet-B5 model and metrics
-saved_model_path = "./efficientnetb5_epoch10_lr0.001_bs10.pt"
+saved_model_path = "./efficientnetb5_epoch10_lr0.0001_bs10.pt"
 model_metrics = torch.load(saved_model_path, map_location=torch.device('cpu'))
 
 # Extract the model state dict and metrics
